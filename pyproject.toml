@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "artifactflow"
+version = "0.1.0"
+description = "Check how artifacts move between jobs in GitHub Actions workflows: name collisions, downloads that race their upload, patterns that match nothing, hidden files that never upload."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Jatin Garg"}]
+requires-python = ">=3.9"
+dependencies = ["PyYAML>=5.4"]
+keywords = ["github-actions", "artifacts", "upload-artifact", "download-artifact", "ci", "linter"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Software Development :: Quality Assurance",
+  "Environment :: Console",
+]
+
+[project.urls]
+Homepage = "https://github.com/jatingargiitk/artifactflow"
+
+[project.scripts]
+artifactflow = "artifactflow.cli:main"
+
+[tool.setuptools]
+packages = ["artifactflow"]

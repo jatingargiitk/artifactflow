@@ -1,0 +1,40 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  wheels:
+    strategy:
+      matrix:
+        target: [x86_64, aarch64]
+    runs-on: ubuntu-latest
+    steps:
+      - run: make wheel TARGET=${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.target }}
+          path: target/wheels/*.whl
+
+  checksums:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sha256sum * > SHA256SUMS
+      - uses: actions/upload-artifact@v7
+        with:
+          name: checksums
+          path: SHA256SUMS
+          archive: false
+
+  publish:
+    needs: [wheels, checksums]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: wheels-*
+          path: dist
+          merge-multiple: true
+      - uses: actions/download-artifact@v5
+        with:
+          name: checksums

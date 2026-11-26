@@ -51,6 +51,11 @@ class Finding:
 
 PRODUCERS = ("upload", "merge", "pages-upload")
 
+CHAR_NAMES = {'"': 'a double quote (")', ":": "a colon (:)", "<": "a less-than sign (<)",
+              ">": "a greater-than sign (>)", "|": "a vertical bar (|)", "*": "an asterisk (*)",
+              "?": "a question mark (?)", "\r": "a carriage return", "\n": "a line feed",
+              "\\": "a backslash (\\)", "/": "a forward slash (/)"}
+
 # input -> (kind, minimum version, what happens on older versions)
 NEEDS_VERSION = {
     ("upload", "overwrite"): (4, 2, 0),
@@ -212,7 +217,7 @@ def check_graph(g: RunGraph, reusable: bool = False) -> List[Finding]:
                 if bad:
                     add(Finding("AF104", "error", op.path, op.line, op.leg.job_id,
                                 "artifact name %s contains %s: upload fails with \"The artifact name is not valid\""
-                                % (_q(nm.literal(pname)), " ".join(repr(c)[1:-1] for c in bad)),
+                                % (_q(nm.literal(pname)), ", ".join(CHAR_NAMES[c] for c in bad)),
                                 ["leg: %s" % op.leg.label] if op.leg.leg else []))
             if op.kind == "upload":
                 p = op.inputs.get("path")
